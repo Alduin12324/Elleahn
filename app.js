@@ -1,41 +1,65 @@
-const selecionados = [];
-function addItem() {
-  const code = document.getElementById('peca').value;
-  const name = document.getElementById('peca').selectedOptions[0].text;
+
+const barcas = {
+  "251": 94,
+  "252": 75,
+  "253": 53,
+  "254": 38
+};
+
+let selecionados = [];
+let quantidadeRestante = 0;
+
+function atualizarQuantidadeRestante() {
+  const barcaCode = document.getElementById('barca').value;
+  const total = barcas[barcaCode] || 0;
+  const usado = selecionados.reduce((sum, item) => sum + item.qtd, 0);
+  quantidadeRestante = total - usado;
+  document.getElementById('quantidade-restante').textContent = quantidadeRestante;
+
+  document.getElementById('confirmar').disabled = quantidadeRestante < 0 || total === 0;
+}
+
+function adicionarItem() {
+  const item = document.getElementById('item').value;
   const qtd = parseInt(document.getElementById('qtd').value);
   const obs = document.getElementById('obs').value;
+  if (!item || isNaN(qtd) || qtd <= 0) return;
 
-  if (!qtd || qtd <= 0) return alert("Quantidade inválida.");
-
-  selecionados.push({ code, name, qtd, obs });
-  render();
+  selecionados.push({ item, qtd, obs });
+  renderizarSelecionados();
+  atualizarQuantidadeRestante();
 }
 
-function render() {
-  const ul = document.getElementById('selecionados');
-  const total = document.getElementById('total');
-  ul.innerHTML = '';
-  let count = 0;
-  selecionados.forEach(i => {
+function renderizarSelecionados() {
+  const lista = document.getElementById('selecionados');
+  lista.innerHTML = '';
+  let total = 0;
+
+  selecionados.forEach(({ item, qtd, obs }) => {
     const li = document.createElement('li');
-    li.textContent = `${i.name} - ${i.qtd}` + (i.obs ? ` (Obs: ${i.obs})` : '');
-    ul.appendChild(li);
-    count += i.qtd;
+    li.textContent = `${item} (${qtd})${obs ? ' - Obs: ' + obs : ''}`;
+    lista.appendChild(li);
+    total += qtd;
   });
-  total.textContent = count;
+
+  document.getElementById('total').textContent = total;
 }
 
-function confirmar() {
+function confirmarPedido() {
   const mesa = document.getElementById('mesa').value;
   const barca = document.getElementById('barca');
-  const limite = parseInt(barca.value);
-  const nomeBarca = barca.selectedOptions[0].text;
-  const total = selecionados.reduce((sum, i) => sum + i.qtd, 0);
-  if (!mesa) return alert("Informe a mesa.");
-  if (total > limite) return alert("Excedeu o limite da barca!");
+  const barcaText = barca.options[barca.selectedIndex].text;
+  const total = selecionados.reduce((sum, item) => sum + item.qtd, 0);
 
-  document.getElementById('mensagem').innerHTML =
-    `<div class='success'>✅ Pedido da mesa ${mesa} confirmado com ${total} peça(s).</div>`;
-  selecionados.length = 0;
-  render();
+  const msg = `✅ Pedido da mesa ${mesa} confirmado com ${total} peça(s).`;
+  document.getElementById('confirmacao').textContent = msg;
+
+  selecionados = [];
+  renderizarSelecionados();
+  atualizarQuantidadeRestante();
 }
+
+document.getElementById('adicionar').onclick = adicionarItem;
+document.getElementById('confirmar').onclick = confirmarPedido;
+document.getElementById('barca').onchange = atualizarQuantidadeRestante;
+
