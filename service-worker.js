@@ -1,7 +1,7 @@
 self.addEventListener('install', function(e) {
   console.log('Service Worker instalado');
   e.waitUntil(
-    caches.open('sushi-cache').then(function(cache) {
+    caches.open('sushi-app-cache').then(function(cache) {
       return cache.addAll([
         '/',
         '/index.html',
@@ -10,6 +10,7 @@ self.addEventListener('install', function(e) {
     })
   );
 });
+
 self.addEventListener('fetch', function(e) {
   e.respondWith(
     caches.match(e.request).then(function(response) {
