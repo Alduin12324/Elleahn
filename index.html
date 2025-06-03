@@ -1,15 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sushi Menu App</title>
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#ffffff" />
-</head>
-<body>
-  <h1>Sushi Menu App</h1>
-  <p>Seu app foi carregado com sucesso!</p>
-  <script src="main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sushi Menu App</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#ffffff" />
+    <style>
+      body { font-family: sans-serif; padding: 1rem; }
+      .card { border: 1px solid #ccc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+      .card input, .card button { margin-top: 0.5rem; }
+      .list { margin-top: 1rem; }
+      .highlight { background: #e0ffe0; padding: 0.5rem; border: 1px solid #0a0; }
+    </style>
+  </head>
+  <body>
+    <h1>Sushi Menu App 🍣</h1>
+    <div>
+      <label>Mesa: <input id="mesa" /></label>
+    </div>
+    <div class="card">
+      <strong>Barca:</strong>
+      <select id="barca">
+        <option value="">Selecione</option>
+        <option value="38">1/2 Barca Level 38 PCS</option>
+        <option value="53">1/2 Barca Esp 53 PCS</option>
+        <option value="75">Barca Level 75 PCS</option>
+        <option value="94">Super Barca 94 PCS</option>
+      </select>
+    </div>
+    <div class="card">
+      <strong>Peças:</strong>
+      <div>
+        <label>Item:
+          <input id="item" placeholder="Ex: 551 - Salmão" />
+        </label>
+      </div>
+      <div>
+        <label>Qtd:
+          <input type="number" id="qtd" value="1" min="1" />
+        </label>
+      </div>
+      <div>
+        <label>Obs:
+          <input id="obs" placeholder="Ex: sem molho" />
+        </label>
+      </div>
+      <button onclick="addItem()">Adicionar</button>
+    </div>
+    <div class="list">
+      <h3>Selecionados:</h3>
+      <ul id="lista"></ul>
+      <p id="total"></p>
+      <button onclick="confirmarPedido()">Confirmar Pedido</button>
+    </div>
+    <div id="mensagem" class="highlight" style="display:none;"></div>
+    <script src="main.js"></script>
+  </body>
 </html>
